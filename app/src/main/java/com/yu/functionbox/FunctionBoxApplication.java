@@ -1,7 +1,6 @@
 package com.yu.functionbox;
 
 import android.app.Application;
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.yu.functionbox.db.dao.DaoMaster;
@@ -33,6 +32,10 @@ public class FunctionBoxApplication extends Application {
         DaoMaster daoMaster = new DaoMaster(db);
         //获取dao对象管理者
         mDaoSession = daoMaster.newSession();
+    }
+
+    public static DaoSession getDaoSession(){
+        return mDaoSession;
     }
 
 
