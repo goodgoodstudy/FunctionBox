@@ -5,17 +5,17 @@ package com.yu.functionbox.data;
  * 方法
  */
 
-public class Function {
-    private int id;
+public class FunctionBean {
+    private long id;
     private String name;
     private String detail;
 
-    public int getId() {
-        return id;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public long getId() {
+        return id;
     }
 
     public String getName() {
