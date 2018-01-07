@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="330dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/corner"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:textColor="#2d2d2d"
+        android:textSize="16sp"
+        android:hint="请输入名称"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="0.5dp"
+        android:background="#e3e3e3" />
+
+    <LinearLayout
+        android:id="@+id/layout_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="1dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_item_bg"
+            android:gravity="center"
+            android:textColor="#000"
+            android:textSize="16sp" />
+
+        <View
+            android:id="@+id/devider"
+            android:layout_width="1px"
+            android:layout_height="25dp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_item_bg"
+            android:gravity="center"
+            android:textColor="#000"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</LinearLayout>
