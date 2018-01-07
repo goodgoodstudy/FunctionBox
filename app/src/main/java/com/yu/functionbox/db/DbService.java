@@ -7,7 +7,7 @@ import com.yu.functionbox.base.BizCallback;
 import com.yu.functionbox.base.BizResult;
 import com.yu.functionbox.base.BusinessId;
 import com.yu.functionbox.data.FunctionBean;
-import com.yu.functionbox.data.ScenesBean;
+import com.yu.functionbox.data.SceneBean;
 import com.yu.functionbox.data.SortBean;
 import com.yu.functionbox.db.dao.FunctionDao;
 import com.yu.functionbox.db.dao.ScenesDao;
@@ -36,7 +36,7 @@ public class DbService {
         return mInstance;
     }
 
-    public void insertSort(BizCallback callback){
+    public void insertSort(String name,BizCallback callback){
         new DBTaskRx(callback){
             @Override
             protected BizResult doInBackground() {
@@ -45,18 +45,19 @@ public class DbService {
                 try{
                     SortDao sortDao = FunctionBoxApplication.getDaoSession().getSortDao();
                     Sort sort = new Sort();
-                    sort.setName("test");
+                    sort.setId(null);
+                    sort.setName(name);
                     sortDao.insert(sort);
                     bizResult.setSucceed(true);
                 }catch (Exception e){
                     Log.e(TAG, "insertSort() e = " + e.getMessage());
                 }
-                return null;
+                return bizResult;
             }
         }.execute();
     }
 
-    public void insertScenes(BizCallback callback){
+    public void insertScenes(long sortId,String title,BizCallback callback){
         new DBTaskRx(callback){
             @Override
             protected BizResult doInBackground() {
@@ -65,18 +66,19 @@ public class DbService {
                 try{
                     ScenesDao scenesDao = FunctionBoxApplication.getDaoSession().getScenesDao();
                     Scenes scenes = new Scenes();
-                    scenes.setName("test");
+                    scenes.setSortId(sortId);
+                    scenes.setName(title);
                     scenesDao.insert(scenes);
                     bizResult.setSucceed(true);
                 }catch (Exception e){
                     Log.e(TAG, "insertScenes() e = " + e.getMessage());
                 }
-                return null;
+                return bizResult;
             }
         }.execute();
     }
 
-    public void insertFunction(BizCallback callback){
+    public void insertFunction(long sceneId, String name,String detail,BizCallback callback){
         new DBTaskRx(callback){
             @Override
             protected BizResult doInBackground() {
@@ -85,13 +87,15 @@ public class DbService {
                 try{
                     FunctionDao functionDao = FunctionBoxApplication.getDaoSession().getFunctionDao();
                     Function function = new Function();
-                    function.setName("test");
+                    function.setSceneId(sceneId);
+                    function.setName(name);
+                    function.setDetail(detail);
                     functionDao.insert(function);
                     bizResult.setSucceed(true);
                 }catch (Exception e){
                     Log.e(TAG, "insertScenes() e = " + e.getMessage());
                 }
-                return null;
+                return bizResult;
             }
         }.execute();
     }
@@ -105,7 +109,7 @@ public class DbService {
                 List <SortBean> sortBeanList = new ArrayList<>();
                 try {
                     SortDao sortDao = FunctionBoxApplication.getDaoSession().getSortDao();
-                    Query<Sort> query = sortDao.queryBuilder().orderDesc(SortDao.Properties.Id).build();
+                    Query<Sort> query = sortDao.queryBuilder().orderAsc(SortDao.Properties.Id).build();
                     List<Sort> sorts = query.list();
                     for(Sort sort:sorts){
                         SortBean bean  = new SortBean();
@@ -113,6 +117,7 @@ public class DbService {
                         bean.setName(sort.getName());
                         sortBeanList.add(bean);
                     }
+                    bizResult.setSucceed(true);
                     bizResult.setData(sortBeanList);
                 } catch (Exception e) {
                     Log.e(TAG, "getSorts() e = " + e.getMessage());
@@ -122,24 +127,25 @@ public class DbService {
         }.execute();
     }
 
-    public void getScenes(BizCallback callback) {
+    public void getScenes(long sortId, BizCallback callback) {
         new DBTaskRx(callback) {
             @Override
             protected BizResult doInBackground() {
                 BizResult bizResult = new BizResult(BusinessId.GET_ALL_SCENES_FROM_DB);
                 bizResult.setSucceed(false);
-                List <ScenesBean> scenesBeanList = new ArrayList<>();
+                List <SceneBean> sceneBeanList = new ArrayList<>();
                 try {
                     ScenesDao scenesDao = FunctionBoxApplication.getDaoSession().getScenesDao();
-                    Query<Scenes> query = scenesDao.queryBuilder().orderDesc(ScenesDao.Properties.Id).build();
+                    Query<Scenes> query = scenesDao.queryBuilder().where(ScenesDao.Properties.SortId.eq(sortId)).orderAsc(ScenesDao.Properties.Id).build();
                     List<Scenes> scenesList = query.list();
                     for(Scenes scenes:scenesList){
-                        ScenesBean bean  = new ScenesBean();
+                        SceneBean bean  = new SceneBean();
                         bean.setId(scenes.getId());
                         bean.setName(scenes.getName());
-                        scenesBeanList.add(bean);
+                        sceneBeanList.add(bean);
                     }
-                    bizResult.setData(scenesBeanList);
+                    bizResult.setSucceed(true);
+                    bizResult.setData(sceneBeanList);
                 } catch (Exception e) {
                     Log.e(TAG, "getScenes() e = " + e.getMessage());
                 }
@@ -148,7 +154,7 @@ public class DbService {
         }.execute();
     }
 
-    public void getFuncitons(BizCallback callback) {
+    public void getFunctions(long sceneId, BizCallback callback) {
         new DBTaskRx(callback) {
             @Override
             protected BizResult doInBackground() {
@@ -157,14 +163,16 @@ public class DbService {
                 List <FunctionBean> functionBeanList = new ArrayList<>();
                 try {
                     FunctionDao functionDao = FunctionBoxApplication.getDaoSession().getFunctionDao();
-                    Query<Function> query = functionDao.queryBuilder().orderDesc(FunctionDao.Properties.Id).build();
+                    Query<Function> query = functionDao.queryBuilder().where(FunctionDao.Properties.SceneId.eq(sceneId)).orderAsc(FunctionDao.Properties.Id).build();
                     List<Function> functionList = query.list();
                     for(Function function:functionList){
                         FunctionBean bean  = new FunctionBean();
                         bean.setId(function.getId());
                         bean.setName(function.getName());
+                        bean.setDetail(function.getDetail());
                         functionBeanList.add(bean);
                     }
+                    bizResult.setSucceed(true);
                     bizResult.setData(functionBeanList);
                 } catch (Exception e) {
                     Log.e(TAG, "getFuncitons() e = " + e.getMessage());

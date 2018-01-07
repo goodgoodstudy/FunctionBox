@@ -24,9 +24,10 @@ public class FunctionDao extends AbstractDao<Function, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Detail = new Property(2, String.class, "detail", false, "DETAIL");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property SceneId = new Property(1, long.class, "sceneId", false, "SCENE_ID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Detail = new Property(3, String.class, "detail", false, "DETAIL");
     }
 
 
@@ -42,9 +43,10 @@ public class FunctionDao extends AbstractDao<Function, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"FUNCTION\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," + // 0: id
-                "\"NAME\" TEXT," + // 1: name
-                "\"DETAIL\" TEXT);"); // 2: detail
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"SCENE_ID\" INTEGER NOT NULL ," + // 1: sceneId
+                "\"NAME\" TEXT," + // 2: name
+                "\"DETAIL\" TEXT);"); // 3: detail
     }
 
     /** Drops the underlying database table. */
@@ -56,55 +58,67 @@ public class FunctionDao extends AbstractDao<Function, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, Function entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+        stmt.bindLong(2, entity.getSceneId());
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String detail = entity.getDetail();
         if (detail != null) {
-            stmt.bindString(3, detail);
+            stmt.bindString(4, detail);
         }
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, Function entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+        stmt.bindLong(2, entity.getSceneId());
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String detail = entity.getDetail();
         if (detail != null) {
-            stmt.bindString(3, detail);
+            stmt.bindString(4, detail);
         }
     }
 
     @Override
     public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 0);
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public Function readEntity(Cursor cursor, int offset) {
         Function entity = new Function( //
-            cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // detail
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.getLong(offset + 1), // sceneId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // detail
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, Function entity, int offset) {
-        entity.setId(cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setDetail(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setSceneId(cursor.getLong(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setDetail(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
      }
     
     @Override
@@ -124,7 +138,7 @@ public class FunctionDao extends AbstractDao<Function, Long> {
 
     @Override
     public boolean hasKey(Function entity) {
-        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
+        return entity.getId() != null;
     }
 
     @Override

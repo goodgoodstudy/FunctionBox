@@ -1,23 +1,33 @@
 package com.yu.functionbox.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.yu.functionbox.R;
-import com.yu.functionbox.base.BaseAdapter;
-import com.yu.functionbox.data.ScenesBean;
-import com.yu.functionbox.databinding.ItemSimpleBinding;
-import com.yu.functionbox.main.SimpleItemViewModel;
+import com.yu.functionbox.base.BaseAdapterWithFooter;
+import com.yu.functionbox.data.SceneBean;
+import com.yu.functionbox.databinding.ItemSceneBinding;
+import com.yu.functionbox.event.EventMessage;
+import com.yu.functionbox.event.MyEvent;
+import com.yu.functionbox.main.SceneItemViewModel;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by yuw on 2017-12-29.
  * description
  */
 
-public class ScenesAdapter extends BaseAdapter<ScenesBean>{
+public class ScenesAdapter extends BaseAdapterWithFooter<SceneBean> {
+    private final static String TAG = "ScenesAdapter";
 
     public ScenesAdapter(Context mContext) {
         super(mContext);
@@ -25,27 +35,52 @@ public class ScenesAdapter extends BaseAdapter<ScenesBean>{
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new SortViewHolder(DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.item_simple, parent, false));
+        if(mFooterView != null && viewType == TYPE_FOOTER) {
+            return new ScenesAdapter.ScenesViewHolder(mFooterView);
+        }
+        return new ScenesViewHolder(DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.item_scene, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((SortViewHolder)holder).bind(mList.get(position));
+        if(holder.getItemViewType() != TYPE_FOOTER) {
+            ((ScenesViewHolder) holder).bind(mList.get(position));
+        }
     }
 
-    class SortViewHolder extends RecyclerView.ViewHolder {
-        ItemSimpleBinding mBinding;
+    class ScenesViewHolder extends RecyclerView.ViewHolder {
+        ItemSceneBinding mBinding;
 
-        public SortViewHolder(ItemSimpleBinding binding) {
+        public ScenesViewHolder(ItemSceneBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
         }
-
-        public void bind(ScenesBean scenesBean){
-            if(mBinding.getViewModel() == null){
-                mBinding.setViewModel(new SimpleItemViewModel());
+        public ScenesViewHolder(View itemView) {
+            super(itemView);
+            if (itemView == mFooterView){
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.i(TAG, "onClick: ");
+                        final EditText editText = new EditText(mContext);
+                        AlertDialog.Builder inputDialog = new AlertDialog.Builder(mContext);
+                        inputDialog.setTitle("请输入名称").setView(editText);
+                        inputDialog.setPositiveButton("确定", (dialogInterface, i) -> {
+                            String title = editText.getText().toString();
+                            if(!TextUtils.isEmpty(title)){
+                                EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SAVE_SCENE,title));
+                            }
+                        }).show();
+                    }
+                });
             }
-            mBinding.getViewModel().bind(scenesBean.getName());
+        }
+
+        public void bind(SceneBean sceneBean){
+            if(mBinding.getViewModel() == null){
+                mBinding.setViewModel(new SceneItemViewModel());
+            }
+            mBinding.getViewModel().bind(sceneBean);
             mBinding.executePendingBindings();
         }
 

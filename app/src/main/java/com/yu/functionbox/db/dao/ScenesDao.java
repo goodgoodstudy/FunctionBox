@@ -24,8 +24,9 @@ public class ScenesDao extends AbstractDao<Scenes, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property SortId = new Property(1, long.class, "sortId", false, "SORT_ID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
     }
 
 
@@ -41,8 +42,9 @@ public class ScenesDao extends AbstractDao<Scenes, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"SCENES\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," + // 0: id
-                "\"NAME\" TEXT);"); // 1: name
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"SORT_ID\" INTEGER NOT NULL ," + // 1: sortId
+                "\"NAME\" TEXT);"); // 2: name
     }
 
     /** Drops the underlying database table. */
@@ -54,43 +56,55 @@ public class ScenesDao extends AbstractDao<Scenes, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, Scenes entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+        stmt.bindLong(2, entity.getSortId());
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, Scenes entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+        stmt.bindLong(2, entity.getSortId());
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
     }
 
     @Override
     public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 0);
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public Scenes readEntity(Cursor cursor, int offset) {
         Scenes entity = new Scenes( //
-            cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // name
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.getLong(offset + 1), // sortId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // name
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, Scenes entity, int offset) {
-        entity.setId(cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setSortId(cursor.getLong(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
      }
     
     @Override
@@ -110,7 +124,7 @@ public class ScenesDao extends AbstractDao<Scenes, Long> {
 
     @Override
     public boolean hasKey(Scenes entity) {
-        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
+        return entity.getId() != null;
     }
 
     @Override

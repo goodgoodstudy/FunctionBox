@@ -7,14 +7,13 @@ import android.databinding.ObservableList;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import com.yu.functionbox.R;
 import com.yu.functionbox.adapter.FunctionAdapter;
 import com.yu.functionbox.adapter.ScenesAdapter;
 import com.yu.functionbox.adapter.SortAdapter;
 import com.yu.functionbox.data.FunctionBean;
-import com.yu.functionbox.data.ScenesBean;
+import com.yu.functionbox.data.SceneBean;
 import com.yu.functionbox.data.SortBean;
 import com.yu.functionbox.databinding.ActivityMainBinding;
 
@@ -27,6 +26,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mViewModel = new MainViewModel();
         mBinding.setViewModel(mViewModel);
@@ -43,10 +43,11 @@ public class MainActivity extends Activity {
         mBinding.rvScenes.setLayoutManager(new LinearLayoutManager(mContext));
         mBinding.rvFunction.setLayoutManager(new LinearLayoutManager(mContext));
         SortAdapter sortAdapter = new SortAdapter(mContext);
-        View header = LayoutInflater.from(this).inflate(R.layout.item_footer,mBinding.rvSort, false);
-        sortAdapter.setFooterView(header);
+        sortAdapter.setFooterView(LayoutInflater.from(this).inflate(R.layout.item_footer,mBinding.rvSort, false));
         ScenesAdapter scenesAdapter = new ScenesAdapter(mContext);
+        scenesAdapter.setFooterView(LayoutInflater.from(this).inflate(R.layout.item_footer,mBinding.rvSort, false));
         FunctionAdapter functionAdapter = new FunctionAdapter(mContext);
+        functionAdapter.setFooterView(LayoutInflater.from(this).inflate(R.layout.item_footer,mBinding.rvSort, false));
         mBinding.rvSort.setAdapter(sortAdapter);
         mBinding.rvScenes.setAdapter(scenesAdapter);
         mBinding.rvFunction.setAdapter(functionAdapter);
@@ -77,29 +78,29 @@ public class MainActivity extends Activity {
             }
         });
 
-        mViewModel.mScenesBeans.addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<ScenesBean>>() {
+        mViewModel.mSceneBeans.addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<SceneBean>>() {
             @Override
-            public void onChanged(ObservableList<ScenesBean> sender) {
+            public void onChanged(ObservableList<SceneBean> sender) {
 
             }
 
             @Override
-            public void onItemRangeChanged(ObservableList<ScenesBean> sender, int positionStart, int itemCount) {
+            public void onItemRangeChanged(ObservableList<SceneBean> sender, int positionStart, int itemCount) {
 
             }
 
             @Override
-            public void onItemRangeInserted(ObservableList<ScenesBean> sender, int positionStart, int itemCount) {
+            public void onItemRangeInserted(ObservableList<SceneBean> sender, int positionStart, int itemCount) {
                 scenesAdapter.setDatas(sender);
             }
 
             @Override
-            public void onItemRangeMoved(ObservableList<ScenesBean> sender, int fromPosition, int toPosition, int itemCount) {
+            public void onItemRangeMoved(ObservableList<SceneBean> sender, int fromPosition, int toPosition, int itemCount) {
 
             }
 
             @Override
-            public void onItemRangeRemoved(ObservableList<ScenesBean> sender, int positionStart, int itemCount) {
+            public void onItemRangeRemoved(ObservableList<SceneBean> sender, int positionStart, int itemCount) {
 
             }
         });
@@ -130,10 +131,14 @@ public class MainActivity extends Activity {
 
             }
         });
-
     }
 
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mViewModel.destroy();
 
+    }
 }

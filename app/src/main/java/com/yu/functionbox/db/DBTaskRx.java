@@ -7,6 +7,7 @@ import com.yu.functionbox.base.BizCallback;
 import com.yu.functionbox.base.BizResult;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -30,10 +31,13 @@ public abstract class DBTaskRx {
     protected abstract BizResult doInBackground();
 
     public void execute() {
-        Observable.create((ObservableOnSubscribe<BaseBizResult>) e -> {
-            BizResult bizResult = doInBackground();
-            if (bizResult != null) {
-                e.onNext(bizResult);
+        Observable.create(new ObservableOnSubscribe<BaseBizResult>() {
+            @Override
+            public void subscribe(ObservableEmitter<BaseBizResult> e) throws Exception {
+                BizResult bizResult = DBTaskRx.this.doInBackground();
+                if (bizResult != null) {
+                    e.onNext(bizResult);
+                }
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<BaseBizResult>() {
             @Override

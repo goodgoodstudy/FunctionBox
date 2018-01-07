@@ -16,6 +16,10 @@ public class FunctionBoxApplication extends Application {
     private static DaoSession mDaoSession;
     private static final String DB_NAME = "function.db";
 
+    public static FunctionBoxApplication getApplication() {
+        return mInstance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

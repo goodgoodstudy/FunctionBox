@@ -12,24 +12,24 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class Function {
     @Id(autoincrement = true)
-    long id;
+    Long id = null;
+    long sceneId;
     String name;
     String detail;
-    @Generated(hash = 445291440)
-    public Function(long id, String name, String detail) {
+    @Generated(hash = 1368095886)
+    public Function(Long id, long sceneId, String name, String detail) {
         this.id = id;
+        this.sceneId = sceneId;
         this.name = name;
         this.detail = detail;
     }
     @Generated(hash = 133141990)
     public Function() {
     }
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
-    public void setId(long id) {
-        this.id = id;
-    }
+
     public String getName() {
         return this.name;
     }
@@ -41,6 +41,15 @@ public class Function {
     }
     public void setDetail(String detail) {
         this.detail = detail;
+    }
+    public long getSceneId() {
+        return this.sceneId;
+    }
+    public void setSceneId(long sceneId) {
+        this.sceneId = sceneId;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

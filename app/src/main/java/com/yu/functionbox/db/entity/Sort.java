@@ -12,20 +12,20 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class Sort {
     @Id(autoincrement = true)
-    long id;
+    Long id = null;
     String name;
-    @Generated(hash = 1533040667)
-    public Sort(long id, String name) {
+    @Generated(hash = 492124304)
+    public Sort(Long id, String name) {
         this.id = id;
         this.name = name;
     }
     @Generated(hash = 1984197757)
     public Sort() {
     }
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getName() {
@@ -34,6 +34,7 @@ public class Sort {
     public void setName(String name) {
         this.name = name;
     }
+
 
 }
 

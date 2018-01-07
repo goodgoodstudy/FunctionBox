@@ -3,13 +3,22 @@ package com.yu.functionbox.main;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Log;
 
+import com.yu.functionbox.base.BaseBizResult;
 import com.yu.functionbox.base.BizCallback;
 import com.yu.functionbox.base.BizResult;
 import com.yu.functionbox.data.FunctionBean;
-import com.yu.functionbox.data.ScenesBean;
+import com.yu.functionbox.data.SceneBean;
 import com.yu.functionbox.data.SortBean;
 import com.yu.functionbox.db.DbService;
+import com.yu.functionbox.event.EventMessage;
+import com.yu.functionbox.event.MyEvent;
+import com.yu.functionbox.utils.EventBusUtils;
+import com.yu.functionbox.utils.ToastUtils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -19,10 +28,16 @@ import java.util.ArrayList;
  */
 
 public class MainViewModel {
+    private final static String TAG = "MainViewModel";
     public ObservableList<SortBean> mSortBeans = new ObservableArrayList<>();
-    public ObservableList<ScenesBean> mScenesBeans = new ObservableArrayList<>();
+    public ObservableList<SceneBean> mSceneBeans = new ObservableArrayList<>();
     public ObservableList<FunctionBean> mFunctionBeans = new ObservableArrayList<>();
+    private long mSortId;
+    private long mSceneId;
 
+    public MainViewModel() {
+        EventBusUtils.register(this);
+    }
 
     public void initData() {
         DbService.get().getSorts(new BizCallback<ArrayList<SortBean>>() {
@@ -30,30 +45,46 @@ public class MainViewModel {
             public void onSucceed(ArrayList<SortBean> response, @NonNull BizResult bizResult) {
                 mSortBeans.clear();
                 mSortBeans.addAll(response);
+                if(response.size()>0){
+                    long id = response.get(0).getId();
+                    mSortId =id;
+                    getScenesBySortId(id);
+                }
             }
 
             @Override
             public void onFailed(String errorMsg, @NonNull BizResult bizResult) {
-
+                Log.i(TAG, "getSorts onFailed: ");
             }
 
         });
 
-        DbService.get().getScenes(new BizCallback<ArrayList<ScenesBean>>() {
+    }
+
+    private void getScenesBySortId(long id) {
+        DbService.get().getScenes(id,new BizCallback<ArrayList<SceneBean>>() {
             @Override
-            public void onSucceed(ArrayList<ScenesBean> response, @NonNull BizResult bizResult) {
-                mScenesBeans.clear();
-                mScenesBeans.addAll(response);
+            public void onSucceed(ArrayList<SceneBean> response, @NonNull BizResult bizResult) {
+                mSceneBeans.clear();
+                mSceneBeans.addAll(response);
+                if(response.size()>0){
+                    long id = response.get(0).getId();
+                    mSceneId = id;
+                    getFunctionBySceneId(mSceneId);
+                }
+
             }
 
             @Override
             public void onFailed(String errorMsg, @NonNull BizResult bizResult) {
-
+                Log.i(TAG, "getScenesBySortId onFailed: ");
             }
 
         });
+    }
 
-        DbService.get().getFuncitons(new BizCallback<ArrayList<FunctionBean>>() {
+    private void getFunctionBySceneId(long sceneId) {
+        DbService.get().getFunctions(sceneId,new BizCallback<ArrayList<FunctionBean>>() {
             @Override
             public void onSucceed(ArrayList<FunctionBean> response, @NonNull BizResult bizResult) {
                 mFunctionBeans.clear();
@@ -62,9 +93,77 @@ public class MainViewModel {
 
             @Override
             public void onFailed(String errorMsg, @NonNull BizResult bizResult) {
-
+                Log.i(TAG, "getFunctionBySceneId onFailed: ");
             }
 
         });
+    }
+
+
+    @Subscribe
+    public void onEventUpdate(EventMessage event) {
+        switch (event.mCode) {
+            case MyEvent.EVENT_SAVE_SORT:
+                String title = (String) event.mObj;
+                if(!TextUtils.isEmpty(title)){
+                    DbService.get().insertSort(title,new BizCallback() {
+                        @Override
+                        public void onSucceed(Object response, @NonNull BaseBizResult bizResult) {
+                            ToastUtils.show("添加成功!");
+                            initData();
+                        }
+                        @Override
+                        public void onFailed(String errorMsg, @NonNull BaseBizResult bizResult) {
+
+                        }
+                    });
+                }
+                break;
+            case MyEvent.EVENT_SAVE_SCENE:
+                String title2 = (String) event.mObj;
+                if(!TextUtils.isEmpty(title2)) {
+                    DbService.get().insertScenes(mSortId,title2, new BizCallback() {
+                        @Override
+                        public void onSucceed(Object response, @NonNull BaseBizResult bizResult) {
+                            ToastUtils.show("添加成功!");
+                            initData();
+                        }
+
+                        @Override
+                        public void onFailed(String errorMsg, @NonNull BaseBizResult bizResult) {
+
+                        }
+                    });
+                }
+                break;
+            case MyEvent.EVENT_SAVE_FUNCTION:
+                String detail = (String) event.mObj;
+                if(!TextUtils.isEmpty(detail)) {
+                    DbService.get().insertFunction(mSceneId,"test", detail, new BizCallback() {
+                        @Override
+                        public void onSucceed(Object response, @NonNull BaseBizResult bizResult) {
+                            ToastUtils.show("添加成功!");
+                            initData();
+                        }
+
+                        @Override
+                        public void onFailed(String errorMsg, @NonNull BaseBizResult bizResult) {
+
+                        }
+                    });
+                }
+                break;
+            case MyEvent.EVENT_CLICK_SORT:
+                mSortId = (long) event.mObj;
+                getScenesBySortId(mSortId);
+                break;
+            case MyEvent.EVENT_CLICK_SCENE:
+                mSceneId = (long) event.mObj;
+                getFunctionBySceneId(mSceneId);
+                break;
+        }
+    }
+    public void destroy(){
+        EventBusUtils.unRegister(this);
     }
 }

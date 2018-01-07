@@ -5,7 +5,7 @@ package com.yu.functionbox.data;
  * 场景
  */
 
-public class ScenesBean {
+public class SceneBean {
     private long id;
     private String name;
 

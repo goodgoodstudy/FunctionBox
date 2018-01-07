@@ -12,27 +12,36 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class Scenes {
     @Id(autoincrement = true)
-    long id;
+    Long id = null;
+    long sortId;
     String name;
-    @Generated(hash = 1509663256)
-    public Scenes(long id, String name) {
+    @Generated(hash = 1715213794)
+    public Scenes(Long id, long sortId, String name) {
         this.id = id;
+        this.sortId = sortId;
         this.name = name;
     }
     @Generated(hash = 1003349671)
     public Scenes() {
     }
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
-    public void setId(long id) {
-        this.id = id;
-    }
+
     public String getName() {
         return this.name;
     }
     public void setName(String name) {
         this.name = name;
+    }
+    public long getSortId() {
+        return this.sortId;
+    }
+    public void setSortId(long sortId) {
+        this.sortId = sortId;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }
