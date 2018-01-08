@@ -44,6 +44,13 @@ public class MainActivity extends Activity {
         mBinding.rvFunction.setLayoutManager(new LinearLayoutManager(mContext));
         SortAdapter sortAdapter = new SortAdapter(mContext);
         sortAdapter.setFooterView(LayoutInflater.from(this).inflate(R.layout.item_footer,mBinding.rvSort, false));
+        sortAdapter.setOnItemClickListener(new SortAdapter.SortItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                sortAdapter.setSelectPos(position);
+                sortAdapter.notifyDataSetChanged();
+            }
+        });
         ScenesAdapter scenesAdapter = new ScenesAdapter(mContext);
         scenesAdapter.setFooterView(LayoutInflater.from(this).inflate(R.layout.item_footer,mBinding.rvSort, false));
         FunctionAdapter functionAdapter = new FunctionAdapter(mContext);

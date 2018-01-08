@@ -13,8 +13,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:onClick="@{()->viewModel.clickSort()}"
-        android:background="@{viewModel.mIsSelect ? @drawable/btn_style_select : @drawable/btn_style_normal}">
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        android:background="@drawable/selector_item">
 
         <TextView
             android:layout_width="wrap_content"

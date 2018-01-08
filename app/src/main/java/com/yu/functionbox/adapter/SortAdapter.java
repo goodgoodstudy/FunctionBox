@@ -29,6 +29,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class SortAdapter extends BaseAdapterWithFooter<SortBean> {
     private final static String TAG = "SortAdapter";
+    private int mSelectPos = 0;
 
     public SortAdapter(Context mContext) {
         super(mContext);
@@ -46,7 +47,8 @@ public class SortAdapter extends BaseAdapterWithFooter<SortBean> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder.getItemViewType() != TYPE_FOOTER){
-            ((SortViewHolder)holder).bind(mList.get(position));
+            ((SortViewHolder)holder).bind(position,mList.get(position));
+
         }
     }
 
@@ -56,6 +58,7 @@ public class SortAdapter extends BaseAdapterWithFooter<SortBean> {
         public SortViewHolder(ItemSortBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
+
         }
 
         public SortViewHolder(View itemView) {
@@ -83,13 +86,39 @@ public class SortAdapter extends BaseAdapterWithFooter<SortBean> {
             }
         }
 
-        public void bind(SortBean sortBean){
+//        public void setSelect(boolean isSelect){
+//            mBinding.getRoot().setSelected(isSelect);
+//        }
+
+        public void bind(final int pos,SortBean sortBean){
             if(mBinding.getViewModel() == null){
                 mBinding.setViewModel(new SortItemViewModel());
             }
             mBinding.getViewModel().bind(sortBean);
+            mBinding.getRoot().setSelected(pos == mSelectPos);
+            mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSortItemClickListener.onItemClick(pos);
+                    mBinding.getViewModel().clickSort();
+                }
+            });
             mBinding.executePendingBindings();
         }
 
+    }
+
+    private SortItemClickListener mSortItemClickListener;
+
+    public interface SortItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(SortItemClickListener listener){
+        mSortItemClickListener = listener;
+    }
+
+    public void setSelectPos(int selectPos) {
+        mSelectPos = selectPos;
     }
 }
