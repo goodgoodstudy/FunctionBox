@@ -14,6 +14,7 @@
         android:orientation="vertical"
         android:gravity="center"
         android:onClick="@{()->viewModel.clickScene()}"
+        android:background="@{viewModel.mIsSelect ? @drawable/item_selected : @drawable/item_normal}"
     >
 
         <TextView

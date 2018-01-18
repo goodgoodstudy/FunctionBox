@@ -5,7 +5,6 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class ScenesAdapter extends BaseAdapterWithFooter<SceneBean> {
     private final static String TAG = "ScenesAdapter";
+    private int mSelectPos = 0;
 
     public ScenesAdapter(Context mContext) {
         super(mContext);
@@ -44,7 +44,7 @@ public class ScenesAdapter extends BaseAdapterWithFooter<SceneBean> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder.getItemViewType() != TYPE_FOOTER) {
-            ((ScenesViewHolder) holder).bind(mList.get(position));
+            ((ScenesViewHolder) holder).bind(position, mList.get(position));
         }
     }
 
@@ -61,7 +61,6 @@ public class ScenesAdapter extends BaseAdapterWithFooter<SceneBean> {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.i(TAG, "onClick: ");
                         final EditText editText = new EditText(mContext);
                         AlertDialog.Builder inputDialog = new AlertDialog.Builder(mContext);
                         inputDialog.setTitle("请输入名称").setView(editText);
@@ -76,13 +75,33 @@ public class ScenesAdapter extends BaseAdapterWithFooter<SceneBean> {
             }
         }
 
-        public void bind(SceneBean sceneBean){
+        public void bind(final int pos, SceneBean sceneBean){
             if(mBinding.getViewModel() == null){
                 mBinding.setViewModel(new SceneItemViewModel());
             }
-            mBinding.getViewModel().bind(sceneBean);
+            mBinding.getViewModel().bind(sceneBean, pos == mSelectPos);
+            mBinding.getRoot().setOnClickListener(view -> {
+                mSceneItemClickListener.onItemClick(pos);
+                mBinding.getViewModel().clickScene();
+                notifyDataSetChanged();
+
+            });
             mBinding.executePendingBindings();
         }
 
+    }
+
+    private ScenesAdapter.SceneItemClickListener mSceneItemClickListener;
+
+    public interface SceneItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(ScenesAdapter.SceneItemClickListener listener){
+        mSceneItemClickListener = listener;
+    }
+
+    public void setSelectPos(int selectPos) {
+        mSelectPos = selectPos;
     }
 }

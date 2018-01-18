@@ -2,7 +2,6 @@ package com.yu.functionbox.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -29,7 +28,6 @@ import org.greenrobot.eventbus.EventBus;
 
 public class FunctionAdapter extends BaseAdapterWithFooter<FunctionBean> {
     private final static String TAG = "FunctionAdapter";
-
     public FunctionAdapter(Context mContext) {
         super(mContext);
     }
@@ -69,13 +67,10 @@ public class FunctionAdapter extends BaseAdapterWithFooter<FunctionBean> {
                         AlertDialog.Builder inputDialog =
                                 new AlertDialog.Builder(mContext);
                         inputDialog.setTitle("请输入内容").setView(editText);
-                        inputDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                String detail = editText.getText().toString();
-                                if(!TextUtils.isEmpty(detail)){
-                                    EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SAVE_FUNCTION,detail));
-                                }
+                        inputDialog.setPositiveButton("确定", (dialogInterface, i) -> {
+                            String detail = editText.getText().toString();
+                            if(!TextUtils.isEmpty(detail)){
+                                EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SAVE_FUNCTION,detail));
                             }
                         }).show();
                     }
@@ -92,4 +87,6 @@ public class FunctionAdapter extends BaseAdapterWithFooter<FunctionBean> {
         }
 
     }
+
+
 }

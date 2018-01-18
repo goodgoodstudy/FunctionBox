@@ -1,5 +1,6 @@
 package com.yu.functionbox.main;
 
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 
 import com.yu.functionbox.R;
@@ -19,11 +20,12 @@ import org.greenrobot.eventbus.EventBus;
 public class SceneItemViewModel extends BaseViewModel{
     private SceneBean mSceneBean;
     public ObservableField<String> mTitle = new ObservableField<>();
+    public ObservableBoolean mIsSelect = new ObservableBoolean();
 
-    public void bind(SceneBean sceneBean) {
+    public void bind(SceneBean sceneBean, boolean isSelect) {
         mSceneBean = sceneBean;
         mTitle.set(sceneBean.getName());
-
+        mIsSelect.set(isSelect);
     }
 
     public void clickScene(){

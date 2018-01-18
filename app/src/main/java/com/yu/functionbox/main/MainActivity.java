@@ -6,7 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ObservableList;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.yu.functionbox.R;
@@ -17,18 +16,26 @@ import com.yu.functionbox.data.FunctionBean;
 import com.yu.functionbox.data.SceneBean;
 import com.yu.functionbox.data.SortBean;
 import com.yu.functionbox.databinding.ActivityMainBinding;
+import com.yu.functionbox.event.EventMessage;
+import com.yu.functionbox.event.MyEvent;
+import com.yu.functionbox.utils.EventBusUtils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 public class MainActivity extends Activity {
     private ActivityMainBinding mBinding;
     private Context mContext;
     private MainViewModel mViewModel;
+    private SortAdapter sortAdapter;
+    private ScenesAdapter scenesAdapter;
+    private FunctionAdapter functionAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        EventBusUtils.register(this);
         mViewModel = new MainViewModel();
         mBinding.setViewModel(mViewModel);
         initData();
@@ -43,19 +50,14 @@ public class MainActivity extends Activity {
         mBinding.rvSort.setLayoutManager(new LinearLayoutManager(mContext));
         mBinding.rvScenes.setLayoutManager(new LinearLayoutManager(mContext));
         mBinding.rvFunction.setLayoutManager(new LinearLayoutManager(mContext));
-        SortAdapter sortAdapter = new SortAdapter(mContext);
-        sortAdapter.setFooterView(LayoutInflater.from(this).inflate(R.layout.item_footer,mBinding.rvSort, false));
-        sortAdapter.setOnItemClickListener(new SortAdapter.SortItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Log.i("yuwei"+this.getClass().getName(),"onitemclick");
-                sortAdapter.setSelectPos(position);
-            }
-        });
-        ScenesAdapter scenesAdapter = new ScenesAdapter(mContext);
-        scenesAdapter.setFooterView(LayoutInflater.from(this).inflate(R.layout.item_footer,mBinding.rvSort, false));
-        FunctionAdapter functionAdapter = new FunctionAdapter(mContext);
-        functionAdapter.setFooterView(LayoutInflater.from(this).inflate(R.layout.item_footer,mBinding.rvSort, false));
+        sortAdapter = new SortAdapter(mContext);
+        sortAdapter.setFooterView(LayoutInflater.from(this).inflate(R.layout.item_footer, mBinding.rvSort, false));
+        sortAdapter.setOnItemClickListener(sortAdapter::setSelectPos);
+        scenesAdapter = new ScenesAdapter(mContext);
+        scenesAdapter.setFooterView(LayoutInflater.from(this).inflate(R.layout.item_footer, mBinding.rvSort, false));
+        scenesAdapter.setOnItemClickListener(scenesAdapter::setSelectPos);
+        functionAdapter = new FunctionAdapter(mContext);
+        functionAdapter.setFooterView(LayoutInflater.from(this).inflate(R.layout.item_footer, mBinding.rvSort, false));
         mBinding.rvSort.setAdapter(sortAdapter);
         mBinding.rvScenes.setAdapter(scenesAdapter);
         mBinding.rvFunction.setAdapter(functionAdapter);
@@ -89,12 +91,10 @@ public class MainActivity extends Activity {
         mViewModel.mSceneBeans.addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<SceneBean>>() {
             @Override
             public void onChanged(ObservableList<SceneBean> sender) {
-
             }
 
             @Override
             public void onItemRangeChanged(ObservableList<SceneBean> sender, int positionStart, int itemCount) {
-
             }
 
             @Override
@@ -104,12 +104,11 @@ public class MainActivity extends Activity {
 
             @Override
             public void onItemRangeMoved(ObservableList<SceneBean> sender, int fromPosition, int toPosition, int itemCount) {
-
             }
 
             @Override
             public void onItemRangeRemoved(ObservableList<SceneBean> sender, int positionStart, int itemCount) {
-
+                scenesAdapter.setDatas(sender);
             }
         });
 
@@ -136,17 +135,29 @@ public class MainActivity extends Activity {
 
             @Override
             public void onItemRangeRemoved(ObservableList<FunctionBean> sender, int positionStart, int itemCount) {
-
+                functionAdapter.setDatas(sender);
             }
         });
     }
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBusUtils.unRegister(this);
         mViewModel.destroy();
 
+    }
+
+    @Subscribe
+    public void onEventUpdate(EventMessage event) {
+        switch (event.mCode) {
+            case MyEvent.EVENT_SELECT_LAST_SORT:
+                sortAdapter.setSelectPos((Integer) event.mObj);
+                break;
+            case MyEvent.EVENT_SELECT_LAST_FUNCTION:
+                scenesAdapter.setSelectPos((Integer) event.mObj);
+                break;
+        }
     }
 }

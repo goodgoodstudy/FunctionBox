@@ -18,6 +18,7 @@ import com.yu.functionbox.event.MyEvent;
 import com.yu.functionbox.utils.EventBusUtils;
 import com.yu.functionbox.utils.ToastUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -71,6 +72,8 @@ public class MainViewModel {
                     long id = response.get(0).getId();
                     mSceneId = id;
                     getFunctionBySceneId(mSceneId);
+                }else{
+                    mFunctionBeans.clear();
                 }
 
             }
@@ -110,7 +113,7 @@ public class MainViewModel {
                         @Override
                         public void onSucceed(Object response, @NonNull BaseBizResult bizResult) {
                             ToastUtils.show("添加成功!");
-                            initData();
+                            updateSort();
                         }
                         @Override
                         public void onFailed(String errorMsg, @NonNull BaseBizResult bizResult) {
@@ -126,7 +129,7 @@ public class MainViewModel {
                         @Override
                         public void onSucceed(Object response, @NonNull BaseBizResult bizResult) {
                             ToastUtils.show("添加成功!");
-                            initData();
+                            updateScene();
                         }
 
                         @Override
@@ -143,7 +146,7 @@ public class MainViewModel {
                         @Override
                         public void onSucceed(Object response, @NonNull BaseBizResult bizResult) {
                             ToastUtils.show("添加成功!");
-                            initData();
+                            updateFunction();
                         }
 
                         @Override
@@ -163,6 +166,69 @@ public class MainViewModel {
                 break;
         }
     }
+
+
+
+    private void updateSort() {
+        DbService.get().getSorts(new BizCallback<ArrayList<SortBean>>() {
+            @Override
+            public void onSucceed(ArrayList<SortBean> response, @NonNull BizResult bizResult) {
+                mSortBeans.clear();
+                mSortBeans.addAll(response);
+                EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SELECT_LAST_SORT,response.size()-1));
+                if(response.size()>0){
+                    long id = response.get(response.size()-1).getId();
+                    mSortId =id;
+                    getScenesBySortId(id);
+                }
+            }
+
+            @Override
+            public void onFailed(String errorMsg, @NonNull BizResult bizResult) {
+                Log.i(TAG, "getSorts onFailed: ");
+            }
+
+        });
+    }
+
+    private void updateScene() {
+        DbService.get().getScenes(mSortId,new BizCallback<ArrayList<SceneBean>>() {
+            @Override
+            public void onSucceed(ArrayList<SceneBean> response, @NonNull BizResult bizResult) {
+                mSceneBeans.clear();
+                mSceneBeans.addAll(response);
+                EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SELECT_LAST_FUNCTION,response.size()-1));
+                if(response.size()>0){
+                    long id = response.get(response.size()-1).getId();
+                    mSceneId = id;
+                    getFunctionBySceneId(mSceneId);
+                }
+            }
+
+            @Override
+            public void onFailed(String errorMsg, @NonNull BizResult bizResult) {
+                Log.i(TAG, "getScenesBySortId onFailed: ");
+            }
+
+        });
+    }
+
+    private void updateFunction() {
+        DbService.get().getFunctions(mSceneId,new BizCallback<ArrayList<FunctionBean>>() {
+            @Override
+            public void onSucceed(ArrayList<FunctionBean> response, @NonNull BizResult bizResult) {
+                mFunctionBeans.clear();
+                mFunctionBeans.addAll(response);
+            }
+
+            @Override
+            public void onFailed(String errorMsg, @NonNull BizResult bizResult) {
+                Log.i(TAG, "getFunctionBySceneId onFailed: ");
+            }
+
+        });
+    }
+
     public void destroy(){
         EventBusUtils.unRegister(this);
     }

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +66,6 @@ public class SortAdapter extends BaseAdapterWithFooter<SortBean> {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.i(TAG, "onClick: ");
                         final EditText editText = new EditText(mContext);
                         AlertDialog.Builder inputDialog =
                                 new AlertDialog.Builder(mContext);
@@ -86,10 +84,6 @@ public class SortAdapter extends BaseAdapterWithFooter<SortBean> {
             }
         }
 
-//        public void setSelect(boolean isSelect){
-//            mBinding.getRoot().setSelected(isSelect);
-//        }
-
         public void bind(final int pos,SortBean sortBean){
             if(mBinding.getViewModel() == null){
                 mBinding.setViewModel(new SortItemViewModel());
@@ -98,7 +92,6 @@ public class SortAdapter extends BaseAdapterWithFooter<SortBean> {
             mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i("yuwei"+this.getClass().getName(),"mBinding onitemclick " +pos);
                     mSortItemClickListener.onItemClick(pos);
                     mBinding.getViewModel().clickSort();
                     notifyDataSetChanged();

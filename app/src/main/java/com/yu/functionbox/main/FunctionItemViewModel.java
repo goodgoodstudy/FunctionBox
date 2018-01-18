@@ -6,6 +6,10 @@ import com.yu.functionbox.R;
 import com.yu.functionbox.data.FunctionBean;
 import com.yu.functionbox.databinding.BaseViewModel;
 import com.yu.functionbox.databinding.BindingView;
+import com.yu.functionbox.event.EventMessage;
+import com.yu.functionbox.event.MyEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by yuw on 2017-12-29.
@@ -19,5 +23,9 @@ public class FunctionItemViewModel extends BaseViewModel{
     public void bind(FunctionBean functionBean) {
         mFunctionBean = functionBean;
         mDetail.set(functionBean.getDetail());
+    }
+
+    public void clickFunction(){
+        EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_CLICK_FUNCTION,mFunctionBean.getId()));
     }
 }
