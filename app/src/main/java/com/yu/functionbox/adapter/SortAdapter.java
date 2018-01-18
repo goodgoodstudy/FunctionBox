@@ -94,13 +94,15 @@ public class SortAdapter extends BaseAdapterWithFooter<SortBean> {
             if(mBinding.getViewModel() == null){
                 mBinding.setViewModel(new SortItemViewModel());
             }
-            mBinding.getViewModel().bind(sortBean);
-            mBinding.getRoot().setSelected(pos == mSelectPos);
+            mBinding.getViewModel().bind(sortBean,pos == mSelectPos);
             mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Log.i("yuwei"+this.getClass().getName(),"mBinding onitemclick " +pos);
                     mSortItemClickListener.onItemClick(pos);
                     mBinding.getViewModel().clickSort();
+                    notifyDataSetChanged();
+
                 }
             });
             mBinding.executePendingBindings();

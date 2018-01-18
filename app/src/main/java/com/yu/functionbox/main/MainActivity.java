@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ObservableList;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.yu.functionbox.R;
@@ -47,8 +48,8 @@ public class MainActivity extends Activity {
         sortAdapter.setOnItemClickListener(new SortAdapter.SortItemClickListener() {
             @Override
             public void onItemClick(int position) {
+                Log.i("yuwei"+this.getClass().getName(),"onitemclick");
                 sortAdapter.setSelectPos(position);
-                sortAdapter.notifyDataSetChanged();
             }
         });
         ScenesAdapter scenesAdapter = new ScenesAdapter(mContext);

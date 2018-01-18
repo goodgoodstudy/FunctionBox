@@ -13,10 +13,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:clickable="true"
-        android:focusableInTouchMode="true"
-        android:focusable="true"
-        android:background="@drawable/selector_item">
+        android:background="@{viewModel.mIsSelect ? @drawable/item_selected : @drawable/item_normal}"
+    >
 
         <TextView
             android:layout_width="wrap_content"
