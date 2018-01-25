@@ -1,24 +1,19 @@
 package com.yu.functionbox.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.yu.functionbox.R;
 import com.yu.functionbox.base.HeaderFooterAdapter;
 import com.yu.functionbox.data.FunctionBean;
 import com.yu.functionbox.databinding.ItemFunctionBinding;
-import com.yu.functionbox.event.EventMessage;
-import com.yu.functionbox.event.MyEvent;
+import com.yu.functionbox.function.FunctionActivity;
 import com.yu.functionbox.main.FunctionItemViewModel;
-
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by yuw on 2017-12-29.
@@ -61,17 +56,9 @@ public class FunctionAdapterAdapter extends HeaderFooterAdapter<FunctionBean> {
             super(itemView);
             if (itemView == mFooterView){
                 itemView.setOnClickListener(view -> {
-                    final EditText editText = new EditText(mContext);
-                    editText.setMinLines(10);
-                    AlertDialog.Builder inputDialog =
-                            new AlertDialog.Builder(mContext);
-                    inputDialog.setTitle("请输入内容").setView(editText);
-                    inputDialog.setPositiveButton("确定", (dialogInterface, i) -> {
-                        String detail = editText.getText().toString();
-                        if(!TextUtils.isEmpty(detail)){
-                            EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SAVE_FUNCTION,detail));
-                        }
-                    }).show();
+                   Intent intent = new Intent(mContext, FunctionActivity.class);
+                   intent.putExtra(FunctionActivity.KEY_TYPE,FunctionActivity.FLAG_CREATE_NEW);
+                   mContext.startActivity(intent);
                 });
             }else if(itemView == mHeaderView){
                 //
@@ -80,7 +67,7 @@ public class FunctionAdapterAdapter extends HeaderFooterAdapter<FunctionBean> {
 
         public void bind(FunctionBean functionBean){
             if(mBinding.getViewModel() == null){
-                mBinding.setViewModel(new FunctionItemViewModel());
+                mBinding.setViewModel(new FunctionItemViewModel(mContext));
             }
             mBinding.getViewModel().bind(functionBean);
             mBinding.executePendingBindings();

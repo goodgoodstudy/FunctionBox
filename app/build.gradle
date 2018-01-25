@@ -44,4 +44,6 @@ dependencies {
     // If you want pre-written Activities and Fragments you can subclass as providers
     api 'com.trello.rxlifecycle2:rxlifecycle-components:2.0.1'
     api 'org.greenrobot:eventbus:3.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:design:26.1.0'
 }

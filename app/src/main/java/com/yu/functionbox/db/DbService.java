@@ -93,7 +93,27 @@ public class DbService {
                     functionDao.insert(function);
                     bizResult.setSucceed(true);
                 }catch (Exception e){
-                    Log.e(TAG, "insertScenes() e = " + e.getMessage());
+                    Log.e(TAG, "insertFunction() e = " + e.getMessage());
+                }
+                return bizResult;
+            }
+        }.execute();
+    }
+
+    public void updateFunction(long id,String content,BizCallback callback){
+        new DBTaskRx(callback){
+            @Override
+            protected BizResult doInBackground() {
+                BizResult bizResult = new BizResult(BusinessId.INSERT_FUNCTION_INFO_TO_DB);
+                bizResult.setSucceed(false);
+                try{
+                    FunctionDao functionDao = FunctionBoxApplication.getDaoSession().getFunctionDao();
+                    Function function = functionDao.queryBuilder().where(FunctionDao.Properties.Id.eq(id)).build().unique();
+                    function.setDetail(content);
+                    functionDao.update(function);
+                    bizResult.setSucceed(true);
+                }catch (Exception e){
+                    Log.e(TAG, "updateFunction() e = " + e.getMessage());
                 }
                 return bizResult;
             }

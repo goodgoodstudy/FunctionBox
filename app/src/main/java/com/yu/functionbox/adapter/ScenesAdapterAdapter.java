@@ -71,7 +71,7 @@ public class ScenesAdapterAdapter extends HeaderFooterAdapter<SceneBean> {
                         inputDialog.setPositiveButton("确定", (dialogInterface, i) -> {
                             String title = editText.getText().toString();
                             if(!TextUtils.isEmpty(title)){
-                                EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SAVE_SCENE,title));
+                                EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_INSERT_SCENE,title));
                             }
                         }).show();
                     }

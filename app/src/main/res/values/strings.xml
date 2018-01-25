@@ -3,4 +3,5 @@
     <string name="sort">分类</string>
     <string name="scenes">场景</string>
     <string name="function">方法</string>
+    <string name="title_activity_function">FunctionActivity</string>
 </resources>

@@ -1,11 +1,13 @@
 package com.yu.functionbox.data;
 
+import java.io.Serializable;
+
 /**
  * Created by yuw on 2017-12-29.
  * 方法
  */
 
-public class FunctionBean {
+public class FunctionBean implements Serializable{
     private long id;
     private String name;
     private String detail;
