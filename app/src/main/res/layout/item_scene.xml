@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:onClick="@{()->viewModel.clickScene()}"
+
         android:background="@{viewModel.mIsSelect ? @drawable/item_selected : @drawable/item_normal}"
     >
 
@@ -25,5 +25,9 @@
             android:gravity="center"
         />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#c8c8c8" />
     </LinearLayout>
 </layout>

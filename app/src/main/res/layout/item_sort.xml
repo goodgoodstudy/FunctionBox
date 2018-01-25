@@ -24,5 +24,10 @@
             android:gravity="center"
         />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#c8c8c8" />
+
     </LinearLayout>
 </layout>

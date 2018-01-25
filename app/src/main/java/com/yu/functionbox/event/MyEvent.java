@@ -14,5 +14,7 @@ public class MyEvent {
     public static final int EVENT_CLICK_FUNCTION = 0x500006;
 
     public static final int EVENT_SELECT_LAST_SORT = 0x500007;
-    public static final int EVENT_SELECT_LAST_FUNCTION = 0x500008;
+    public static final int EVENT_SELECT_LAST_SCENE = 0x500008;
+    public static final int EVENT_SELECT_FIRST_SORT = 0x500009;
+    public static final int EVENT_SELECT_FIRST_SCENE = 0x500010;
 }

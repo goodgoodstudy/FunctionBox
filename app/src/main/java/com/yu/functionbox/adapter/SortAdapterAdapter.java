@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.yu.functionbox.R;
-import com.yu.functionbox.base.BaseAdapterWithFooter;
+import com.yu.functionbox.base.HeaderFooterAdapter;
 import com.yu.functionbox.data.SortBean;
 import com.yu.functionbox.databinding.ItemSortBinding;
 import com.yu.functionbox.event.EventMessage;
@@ -26,11 +26,11 @@ import org.greenrobot.eventbus.EventBus;
  * description
  */
 
-public class SortAdapter extends BaseAdapterWithFooter<SortBean> {
+public class SortAdapterAdapter extends HeaderFooterAdapter<SortBean> {
     private final static String TAG = "SortAdapter";
     private int mSelectPos = 0;
 
-    public SortAdapter(Context mContext) {
+    public SortAdapterAdapter(Context mContext) {
         super(mContext);
     }
 
@@ -39,15 +39,18 @@ public class SortAdapter extends BaseAdapterWithFooter<SortBean> {
         if(mFooterView != null && viewType == TYPE_FOOTER) {
             return new SortViewHolder(mFooterView);
         }
+        if(mHeaderView != null && viewType == TYPE_HEADER){
+            return new SortViewHolder(mHeaderView);
+        }
         return new SortViewHolder(DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.item_sort, parent, false));
     }
 
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(holder.getItemViewType() != TYPE_FOOTER){
-            ((SortViewHolder)holder).bind(position,mList.get(position));
 
+        if(holder.getItemViewType() != TYPE_FOOTER && holder.getItemViewType() != TYPE_HEADER){
+            ((SortViewHolder)holder).bind(position,mList.get(position-1));
         }
     }
 

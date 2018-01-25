@@ -47,6 +47,7 @@ public class MainViewModel {
                 mSortBeans.clear();
                 mSortBeans.addAll(response);
                 if(response.size()>0){
+                    EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SELECT_FIRST_SORT));
                     long id = response.get(0).getId();
                     mSortId =id;
                     getScenesBySortId(id);
@@ -69,8 +70,8 @@ public class MainViewModel {
                 mSceneBeans.clear();
                 mSceneBeans.addAll(response);
                 if(response.size()>0){
-                    long id = response.get(0).getId();
-                    mSceneId = id;
+                    EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SELECT_FIRST_SCENE));
+                    mSceneId = response.get(0).getId();
                     getFunctionBySceneId(mSceneId);
                 }else{
                     mFunctionBeans.clear();
@@ -175,9 +176,9 @@ public class MainViewModel {
             public void onSucceed(ArrayList<SortBean> response, @NonNull BizResult bizResult) {
                 mSortBeans.clear();
                 mSortBeans.addAll(response);
-                EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SELECT_LAST_SORT,response.size()-1));
                 if(response.size()>0){
-                    long id = response.get(response.size()-1).getId();
+                    EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SELECT_LAST_SORT,response.size()));
+                    long id = response.get(response.size()).getId();
                     mSortId =id;
                     getScenesBySortId(id);
                 }
@@ -197,10 +198,9 @@ public class MainViewModel {
             public void onSucceed(ArrayList<SceneBean> response, @NonNull BizResult bizResult) {
                 mSceneBeans.clear();
                 mSceneBeans.addAll(response);
-                EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SELECT_LAST_FUNCTION,response.size()-1));
+                EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SELECT_LAST_SCENE,response.size()));
                 if(response.size()>0){
-                    long id = response.get(response.size()-1).getId();
-                    mSceneId = id;
+                    mSceneId = response.get(response.size()-1).getId();
                     getFunctionBySceneId(mSceneId);
                 }
             }

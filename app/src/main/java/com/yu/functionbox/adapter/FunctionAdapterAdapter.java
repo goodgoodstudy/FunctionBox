@@ -5,14 +5,13 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.yu.functionbox.R;
-import com.yu.functionbox.base.BaseAdapterWithFooter;
+import com.yu.functionbox.base.HeaderFooterAdapter;
 import com.yu.functionbox.data.FunctionBean;
 import com.yu.functionbox.databinding.ItemFunctionBinding;
 import com.yu.functionbox.event.EventMessage;
@@ -26,9 +25,9 @@ import org.greenrobot.eventbus.EventBus;
  * description
  */
 
-public class FunctionAdapter extends BaseAdapterWithFooter<FunctionBean> {
+public class FunctionAdapterAdapter extends HeaderFooterAdapter<FunctionBean> {
     private final static String TAG = "FunctionAdapter";
-    public FunctionAdapter(Context mContext) {
+    public FunctionAdapterAdapter(Context mContext) {
         super(mContext);
     }
 
@@ -37,13 +36,16 @@ public class FunctionAdapter extends BaseAdapterWithFooter<FunctionBean> {
         if(mFooterView != null && viewType == TYPE_FOOTER) {
             return new FunctionHolder(mFooterView);
         }
+        if(mHeaderView != null && viewType == TYPE_HEADER){
+            return new FunctionHolder(mHeaderView);
+        }
         return new FunctionHolder(DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.item_function, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(holder.getItemViewType() != TYPE_FOOTER){
-            ((FunctionHolder)holder).bind(mList.get(position));
+        if(holder.getItemViewType() != TYPE_FOOTER && holder.getItemViewType() != TYPE_HEADER ){
+            ((FunctionHolder)holder).bind(mList.get(position-1));
         }
     }
 
@@ -58,23 +60,21 @@ public class FunctionAdapter extends BaseAdapterWithFooter<FunctionBean> {
         public FunctionHolder(View itemView) {
             super(itemView);
             if (itemView == mFooterView){
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.i(TAG, "onClick: ");
-                        final EditText editText = new EditText(mContext);
-                        editText.setMinLines(10);
-                        AlertDialog.Builder inputDialog =
-                                new AlertDialog.Builder(mContext);
-                        inputDialog.setTitle("请输入内容").setView(editText);
-                        inputDialog.setPositiveButton("确定", (dialogInterface, i) -> {
-                            String detail = editText.getText().toString();
-                            if(!TextUtils.isEmpty(detail)){
-                                EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SAVE_FUNCTION,detail));
-                            }
-                        }).show();
-                    }
+                itemView.setOnClickListener(view -> {
+                    final EditText editText = new EditText(mContext);
+                    editText.setMinLines(10);
+                    AlertDialog.Builder inputDialog =
+                            new AlertDialog.Builder(mContext);
+                    inputDialog.setTitle("请输入内容").setView(editText);
+                    inputDialog.setPositiveButton("确定", (dialogInterface, i) -> {
+                        String detail = editText.getText().toString();
+                        if(!TextUtils.isEmpty(detail)){
+                            EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_SAVE_FUNCTION,detail));
+                        }
+                    }).show();
                 });
+            }else if(itemView == mHeaderView){
+                //
             }
         }
 

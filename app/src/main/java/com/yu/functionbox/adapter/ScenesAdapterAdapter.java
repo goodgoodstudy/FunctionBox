@@ -11,12 +11,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.yu.functionbox.R;
-import com.yu.functionbox.base.BaseAdapterWithFooter;
+import com.yu.functionbox.base.HeaderFooterAdapter;
 import com.yu.functionbox.data.SceneBean;
 import com.yu.functionbox.databinding.ItemSceneBinding;
 import com.yu.functionbox.event.EventMessage;
 import com.yu.functionbox.event.MyEvent;
 import com.yu.functionbox.main.SceneItemViewModel;
+import com.yu.functionbox.utils.LogUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -25,26 +26,29 @@ import org.greenrobot.eventbus.EventBus;
  * description
  */
 
-public class ScenesAdapter extends BaseAdapterWithFooter<SceneBean> {
+public class ScenesAdapterAdapter extends HeaderFooterAdapter<SceneBean> {
     private final static String TAG = "ScenesAdapter";
     private int mSelectPos = 0;
 
-    public ScenesAdapter(Context mContext) {
+    public ScenesAdapterAdapter(Context mContext) {
         super(mContext);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(mFooterView != null && viewType == TYPE_FOOTER) {
-            return new ScenesAdapter.ScenesViewHolder(mFooterView);
+            return new ScenesViewHolder(mFooterView);
+        }
+        if(mHeaderView != null && viewType == TYPE_HEADER){
+            return new ScenesViewHolder(mHeaderView);
         }
         return new ScenesViewHolder(DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.item_scene, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(holder.getItemViewType() != TYPE_FOOTER) {
-            ((ScenesViewHolder) holder).bind(position, mList.get(position));
+        if(holder.getItemViewType() != TYPE_FOOTER && holder.getItemViewType() != TYPE_HEADER) {
+            ((ScenesViewHolder) holder).bind(position, mList.get(position-1));
         }
     }
 
@@ -72,6 +76,8 @@ public class ScenesAdapter extends BaseAdapterWithFooter<SceneBean> {
                         }).show();
                     }
                 });
+            }else if(itemView == mHeaderView){
+                //
             }
         }
 
@@ -79,29 +85,30 @@ public class ScenesAdapter extends BaseAdapterWithFooter<SceneBean> {
             if(mBinding.getViewModel() == null){
                 mBinding.setViewModel(new SceneItemViewModel());
             }
+            LogUtil.i(mContext,"bind"+pos+"----"+mSelectPos);
             mBinding.getViewModel().bind(sceneBean, pos == mSelectPos);
             mBinding.getRoot().setOnClickListener(view -> {
                 mSceneItemClickListener.onItemClick(pos);
                 mBinding.getViewModel().clickScene();
                 notifyDataSetChanged();
-
             });
             mBinding.executePendingBindings();
         }
 
     }
 
-    private ScenesAdapter.SceneItemClickListener mSceneItemClickListener;
+    private ScenesAdapterAdapter.SceneItemClickListener mSceneItemClickListener;
 
     public interface SceneItemClickListener{
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(ScenesAdapter.SceneItemClickListener listener){
+    public void setOnItemClickListener(ScenesAdapterAdapter.SceneItemClickListener listener){
         mSceneItemClickListener = listener;
     }
 
     public void setSelectPos(int selectPos) {
         mSelectPos = selectPos;
+        LogUtil.i(mContext,"setSelectPos"+selectPos);
     }
 }

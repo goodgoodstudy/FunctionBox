@@ -20,7 +20,13 @@
             android:layout_height="wrap_content"
             android:padding="6dp"
             android:text="@{viewModel.mDetail, default=test}"
+            android:maxLines="5"
+            android:ellipsize="end"
         />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#c8c8c8" />
     </LinearLayout>
 </layout>
