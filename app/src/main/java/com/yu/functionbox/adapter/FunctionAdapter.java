@@ -1,5 +1,6 @@
 package com.yu.functionbox.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -20,9 +21,10 @@ import com.yu.functionbox.main.FunctionItemViewModel;
  * description
  */
 
-public class FunctionAdapterAdapter extends HeaderFooterAdapter<FunctionBean> {
+public class FunctionAdapter extends HeaderFooterAdapter<FunctionBean> {
     private final static String TAG = "FunctionAdapter";
-    public FunctionAdapterAdapter(Context mContext) {
+
+    public FunctionAdapter(Context mContext) {
         super(mContext);
     }
 
@@ -58,7 +60,7 @@ public class FunctionAdapterAdapter extends HeaderFooterAdapter<FunctionBean> {
                 itemView.setOnClickListener(view -> {
                    Intent intent = new Intent(mContext, FunctionActivity.class);
                    intent.putExtra(FunctionActivity.KEY_TYPE,FunctionActivity.FLAG_CREATE_NEW);
-                   mContext.startActivity(intent);
+                    ((Activity)mContext).startActivityForResult(intent,FunctionActivity.REQUEST_FUNCTION);
                 });
             }else if(itemView == mHeaderView){
                 //

@@ -17,6 +17,8 @@ public class FunctionActivity extends AppCompatActivity {
     public static final String KEY_CONTENT = "key_content";
     public static final String KEY_ID = "key_id";
     public static final String KEY_TYPE = "key_type";
+    public static final int RESULT_FUNCTION = 101;
+    public final static int REQUEST_FUNCTION = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,5 +50,17 @@ public class FunctionActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 
+    @Override
+    public void finish() {
+        if(mViewModel.isEdited()){
+            this.setResult(RESULT_FUNCTION);
+        }
+        super.finish();
+    }
 }

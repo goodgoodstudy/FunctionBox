@@ -26,11 +26,11 @@ import org.greenrobot.eventbus.EventBus;
  * description
  */
 
-public class ScenesAdapterAdapter extends HeaderFooterAdapter<SceneBean> {
+public class ScenesAdapter extends HeaderFooterAdapter<SceneBean> {
     private final static String TAG = "ScenesAdapter";
     private int mSelectPos = 0;
 
-    public ScenesAdapterAdapter(Context mContext) {
+    public ScenesAdapter(Context mContext) {
         super(mContext);
     }
 
@@ -97,13 +97,13 @@ public class ScenesAdapterAdapter extends HeaderFooterAdapter<SceneBean> {
 
     }
 
-    private ScenesAdapterAdapter.SceneItemClickListener mSceneItemClickListener;
+    private ScenesAdapter.SceneItemClickListener mSceneItemClickListener;
 
     public interface SceneItemClickListener{
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(ScenesAdapterAdapter.SceneItemClickListener listener){
+    public void setOnItemClickListener(ScenesAdapter.SceneItemClickListener listener){
         mSceneItemClickListener = listener;
     }
 

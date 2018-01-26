@@ -21,8 +21,9 @@ public class FunctionViewModel {
     private Context mContext;
     public ObservableField<String> mContent = new ObservableField<>();
     public ObservableBoolean enable = new ObservableBoolean();
-    public boolean mIsCheck;
-    public long mId;
+    private boolean mIsCheck;
+    private long mId;
+    private boolean isEdited;
 
     public FunctionViewModel(Context context) {
         mContext = context;
@@ -46,7 +47,13 @@ public class FunctionViewModel {
 
         }
     }
+
+    public boolean isEdited() {
+        return isEdited;
+    }
+
     public void completeEdit(){
+        isEdited = true;
         if(mIsCheck){
             FunctionBean bean = new FunctionBean();
             bean.setId(mId);

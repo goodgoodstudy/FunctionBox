@@ -230,7 +230,7 @@ public class MainViewModel {
         });
     }
 
-    private void updateFunction() {
+    public void updateFunction() {
         DbService.get().getFunctions(mSceneId, new BizCallback<ArrayList<FunctionBean>>() {
             @Override
             public void onSucceed(ArrayList<FunctionBean> response, @NonNull BizResult bizResult) {

@@ -1,5 +1,6 @@
 package com.yu.functionbox.main;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.ObservableField;
@@ -35,6 +36,6 @@ public class FunctionItemViewModel extends BaseViewModel{
         intent.putExtra(FunctionActivity.KEY_TYPE,FunctionActivity.FLAG_CHECK);
         intent.putExtra(FunctionActivity.KEY_ID,mFunctionBean.getId());
         intent.putExtra(FunctionActivity.KEY_CONTENT,mFunctionBean.getDetail());
-        mContext.startActivity(intent);
+        ((Activity)mContext).startActivityForResult(intent,FunctionActivity.REQUEST_FUNCTION);
     }
 }

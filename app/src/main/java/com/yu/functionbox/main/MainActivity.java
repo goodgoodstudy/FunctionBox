@@ -2,6 +2,7 @@ package com.yu.functionbox.main;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableList;
 import android.os.Bundle;
@@ -11,15 +12,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.yu.functionbox.R;
-import com.yu.functionbox.adapter.FunctionAdapterAdapter;
-import com.yu.functionbox.adapter.ScenesAdapterAdapter;
-import com.yu.functionbox.adapter.SortAdapterAdapter;
+import com.yu.functionbox.adapter.FunctionAdapter;
+import com.yu.functionbox.adapter.ScenesAdapter;
+import com.yu.functionbox.adapter.SortAdapter;
 import com.yu.functionbox.data.FunctionBean;
 import com.yu.functionbox.data.SceneBean;
 import com.yu.functionbox.data.SortBean;
 import com.yu.functionbox.databinding.ActivityMainBinding;
 import com.yu.functionbox.event.EventMessage;
 import com.yu.functionbox.event.MyEvent;
+import com.yu.functionbox.function.FunctionActivity;
 import com.yu.functionbox.utils.EventBusUtils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -28,9 +30,9 @@ public class MainActivity extends Activity {
     private ActivityMainBinding mBinding;
     private Context mContext;
     private MainViewModel mViewModel;
-    private SortAdapterAdapter sortAdapter;
-    private ScenesAdapterAdapter scenesAdapter;
-    private FunctionAdapterAdapter functionAdapter;
+    private SortAdapter sortAdapter;
+    private ScenesAdapter scenesAdapter;
+    private FunctionAdapter functionAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +54,14 @@ public class MainActivity extends Activity {
         mBinding.rvSort.setLayoutManager(new LinearLayoutManager(mContext));
         mBinding.rvScenes.setLayoutManager(new LinearLayoutManager(mContext));
         mBinding.rvFunction.setLayoutManager(new LinearLayoutManager(mContext));
-        sortAdapter = new SortAdapterAdapter(mContext);
+        sortAdapter = new SortAdapter(mContext);
         View sortHeadView = LayoutInflater.from(this).inflate(R.layout.item_header,mBinding.rvSort,false);
         ((TextView)sortHeadView.findViewById(R.id.header_text)).setText(R.string.sort);
         sortAdapter.setHeaderView(sortHeadView);
         sortAdapter.setFooterView(LayoutInflater.from(this).inflate(R.layout.item_footer, mBinding.rvSort, false));
         sortAdapter.setOnItemClickListener(sortAdapter::setSelectPos);
 
-        scenesAdapter = new ScenesAdapterAdapter(mContext);
+        scenesAdapter = new ScenesAdapter(mContext);
         View scenesHeadView = LayoutInflater.from(this).inflate(R.layout.item_header,mBinding.rvSort,false);
         ((TextView)scenesHeadView.findViewById(R.id.header_text)).setText(R.string.scenes);
         scenesAdapter.setHeaderView(scenesHeadView);
@@ -68,7 +70,7 @@ public class MainActivity extends Activity {
             scenesAdapter.setSelectPos(selectPos);
         });
 
-        functionAdapter = new FunctionAdapterAdapter(mContext);
+        functionAdapter = new FunctionAdapter(mContext);
         View functionHeadView = LayoutInflater.from(this).inflate(R.layout.item_header,mBinding.rvSort,false);
         ((TextView)functionHeadView.findViewById(R.id.header_text)).setText(R.string.function);
         functionAdapter.setHeaderView(functionHeadView);
@@ -180,6 +182,14 @@ public class MainActivity extends Activity {
                 scenesAdapter.setSelectPos(1);
                 break;
 
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == FunctionActivity.REQUEST_FUNCTION && resultCode == FunctionActivity.RESULT_FUNCTION){
+            mViewModel.updateFunction();
         }
     }
 }

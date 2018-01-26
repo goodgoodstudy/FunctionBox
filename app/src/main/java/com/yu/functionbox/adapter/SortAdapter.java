@@ -26,11 +26,11 @@ import org.greenrobot.eventbus.EventBus;
  * description
  */
 
-public class SortAdapterAdapter extends HeaderFooterAdapter<SortBean> {
+public class SortAdapter extends HeaderFooterAdapter<SortBean> {
     private final static String TAG = "SortAdapter";
     private int mSelectPos = 0;
 
-    public SortAdapterAdapter(Context mContext) {
+    public SortAdapter(Context mContext) {
         super(mContext);
     }
 
