@@ -19,9 +19,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public abstract class DBTaskRx {
 
-    public DBTaskRx() {
-    }
-
     public DBTaskRx(@Nullable BizCallback BizCallback) {
         mCallback = BizCallback;
     }

@@ -71,7 +71,7 @@ public class ScenesAdapter extends HeaderFooterAdapter<SceneBean> {
                         inputDialog.setPositiveButton("确定", (dialogInterface, i) -> {
                             String title = editText.getText().toString();
                             if(!TextUtils.isEmpty(title)){
-                                EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_INSERT_SCENE,title));
+                                EventBus.getDefault().post(new EventMessage<>(MyEvent.INSTANCE.getEVENT_INSERT_SCENE(),title));
                             }
                         }).show();
                     }
@@ -85,7 +85,7 @@ public class ScenesAdapter extends HeaderFooterAdapter<SceneBean> {
             if(mBinding.getViewModel() == null){
                 mBinding.setViewModel(new SceneItemViewModel());
             }
-            LogUtil.i(mContext,"bind"+pos+"----"+mSelectPos);
+            LogUtil.INSTANCE.i(mContext,"bind"+pos+"----"+mSelectPos);
             mBinding.getViewModel().bind(sceneBean, pos == mSelectPos);
             mBinding.getRoot().setOnClickListener(view -> {
                 mSceneItemClickListener.onItemClick(pos);
@@ -109,6 +109,6 @@ public class ScenesAdapter extends HeaderFooterAdapter<SceneBean> {
 
     public void setSelectPos(int selectPos) {
         mSelectPos = selectPos;
-        LogUtil.i(mContext,"setSelectPos"+selectPos);
+        LogUtil.INSTANCE.i(mContext,"setSelectPos"+selectPos);
     }
 }

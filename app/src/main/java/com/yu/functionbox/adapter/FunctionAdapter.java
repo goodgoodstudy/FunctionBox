@@ -59,8 +59,8 @@ public class FunctionAdapter extends HeaderFooterAdapter<FunctionBean> {
             if (itemView == mFooterView){
                 itemView.setOnClickListener(view -> {
                    Intent intent = new Intent(mContext, FunctionActivity.class);
-                   intent.putExtra(FunctionActivity.KEY_TYPE,FunctionActivity.FLAG_CREATE_NEW);
-                    ((Activity)mContext).startActivityForResult(intent,FunctionActivity.REQUEST_FUNCTION);
+                   intent.putExtra(FunctionActivity.Companion.getKEY_TYPE(), FunctionActivity.Companion.getFLAG_CREATE_NEW());
+                    ((Activity)mContext).startActivityForResult(intent, FunctionActivity.Companion.getREQUEST_FUNCTION());
                 });
             }else if(itemView == mHeaderView){
                 //
