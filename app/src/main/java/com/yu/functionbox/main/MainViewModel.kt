@@ -12,6 +12,7 @@ import com.yu.functionbox.data.SortBean
 import com.yu.functionbox.db.DbService
 import com.yu.functionbox.event.EventMessage
 import com.yu.functionbox.event.MyEvent
+import com.yu.functionbox.utils.DbBackUpUtils
 import com.yu.functionbox.utils.EventBusUtils
 import com.yu.functionbox.utils.ToastUtils
 import org.greenrobot.eventbus.EventBus
@@ -55,6 +56,9 @@ class MainViewModel {
 
     }
 
+    fun backUpDb(){
+        DbBackUpUtils.backUpDb()
+    }
     private fun getScenesBySortId(id: Long) {
         DbService.getScenes(id, object : BizCallback<ArrayList<SceneBean>> {
             override fun onSucceed(response: ArrayList<SceneBean>, bizResult: BizResult) {

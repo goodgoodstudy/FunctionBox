@@ -8,7 +8,8 @@
             name="viewModel"
             type="com.yu.functionbox.main.MainViewModel"/>
     </data>
-    <RelativeLayout
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
@@ -57,5 +58,28 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+        <!-- 左侧滑动栏 -->
+        <RelativeLayout
+            android:id="@+id/left_drawer_layout"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@color/colorPrimary"
+            android:paddingTop="50dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="4dp"
+                android:text="@string/db_back_up"
+                android:background="@color/white"
+                android:onClick="@{()->viewModel.backUpDb()}"
+                android:clickable="true"
+                android:focusable="true"
+            />
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.DrawerLayout>
 </layout>

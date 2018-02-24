@@ -4,4 +4,6 @@
     <string name="scenes">场景</string>
     <string name="function">方法</string>
     <string name="title_activity_function">FunctionActivity</string>
+    <string name="db_back_up">数据库备份</string>
+    <string name="back_up_success">备份成功!</string>
 </resources>

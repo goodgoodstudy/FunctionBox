@@ -3,14 +3,15 @@ package com.yu.functionbox.main
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableList
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
-
 import com.yu.functionbox.R
 import com.yu.functionbox.adapter.FunctionAdapter
 import com.yu.functionbox.adapter.ScenesAdapter
@@ -23,7 +24,6 @@ import com.yu.functionbox.event.EventMessage
 import com.yu.functionbox.event.MyEvent
 import com.yu.functionbox.function.FunctionActivity
 import com.yu.functionbox.utils.EventBusUtils
-
 import org.greenrobot.eventbus.Subscribe
 
 class MainActivity : Activity() {
@@ -33,18 +33,36 @@ class MainActivity : Activity() {
     private lateinit var sortAdapter: SortAdapter
     private lateinit var scenesAdapter: ScenesAdapter
     private lateinit var functionAdapter: FunctionAdapter
+    private val permissions = arrayOf("android.permission.READ_EXTERNAL_STORAGE","android.permission.WRITE_EXTERNAL_STORAGE")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestPermission()
         mContext = this
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         EventBusUtils.register(this)
         mViewModel = MainViewModel()
         mBinding.viewModel = mViewModel
+        initView()
         initData()
         initAdapter()
+
+
+    }
+    private fun initView(){
+
     }
 
+    private fun requestPermission(){
+        try {
+            val permission = ActivityCompat.checkSelfPermission(this,"android.permission.WRITE_EXTERNAL_STORAGE")
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, permissions,1)
+            }
+        }catch (e :Exception){
+            e.printStackTrace()
+        }
+    }
     private fun initData() {
         mViewModel.initData()
     }
