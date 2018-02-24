@@ -20,8 +20,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ToolbarTheme"
         />
 
         <EditText
@@ -44,7 +43,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_margin="20dp"
-            android:src="@android:drawable/ic_menu_edit"
+            android:src="@{viewModel.mIconDrawable}"
             android:onClick="@{()->viewModel.action()}"
         />
     </RelativeLayout>

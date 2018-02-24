@@ -172,7 +172,7 @@ class MainViewModel {
                 mSortBeans.addAll(response)
                 if (response.size > 0) {
                     EventBus.getDefault().post(EventMessage(MyEvent.EVENT_SELECT_LAST_SORT, response.size))
-                    val id = response[response.size].id
+                    val id = response[response.size-1].id
                     mSortId = id
                     getScenesBySortId(id)
                 }

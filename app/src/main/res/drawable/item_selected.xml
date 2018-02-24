@@ -12,7 +12,7 @@
 
     <!--- 填充颜色，选中和未选中的区别就在这里还有文字颜色-->
     <solid
-        android:color="@color/gray"/>
+        android:color="@color/view_select"/>
 
 
 </shape>

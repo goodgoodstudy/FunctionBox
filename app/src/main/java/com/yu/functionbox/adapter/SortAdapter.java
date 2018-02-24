@@ -78,7 +78,7 @@ public class SortAdapter extends HeaderFooterAdapter<SortBean> {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                  String title = editText.getText().toString();
                                 if(!TextUtils.isEmpty(title)){
-                                    EventBus.getDefault().post(new EventMessage<>(MyEvent.INSTANCE.getEVENT_INSERT_SORT(),title));
+                                    EventBus.getDefault().post(new EventMessage<>(MyEvent.EVENT_INSERT_SORT,title));
                                 }
                             }
                         }).show();

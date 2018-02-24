@@ -3,12 +3,14 @@ package com.yu.functionbox.function
 import android.content.Context
 import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
+import android.graphics.drawable.Drawable
 
 import com.yu.functionbox.R
 import com.yu.functionbox.data.FunctionBean
 import com.yu.functionbox.databinding.BindingView
 import com.yu.functionbox.event.EventMessage
 import com.yu.functionbox.event.MyEvent
+import com.yu.functionbox.utils.ResourceUtil
 
 import org.greenrobot.eventbus.EventBus
 
@@ -20,6 +22,7 @@ import org.greenrobot.eventbus.EventBus
 class FunctionViewModel(private val mContext: Context) {
     var mContent = ObservableField<String>()
     var enable = ObservableBoolean()
+    var mIconDrawable = ObservableField<Drawable>(ResourceUtil.getDrawable(android.R.drawable.ic_menu_edit))
     private var mIsCheck: Boolean = false
     private var mId: Long = 0
     var isEdited: Boolean = false
@@ -39,9 +42,10 @@ class FunctionViewModel(private val mContext: Context) {
         if (enable.get()) {
             completeEdit()
             enableEdit(false)
+            mIconDrawable.set(ResourceUtil.getDrawable(android.R.drawable.ic_menu_edit))
         } else {
             enableEdit(true)
-
+            mIconDrawable.set(ResourceUtil.getDrawable(android.R.drawable.ic_menu_save))
         }
     }
 

@@ -21,7 +21,7 @@ class FunctionActivity : AppCompatActivity() {
         if (supportActionBar != null) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
-        toolbar.setNavigationOnClickListener { v -> finish() }
+        toolbar.setNavigationOnClickListener { finish() }
 
         initData()
     }
@@ -44,7 +44,7 @@ class FunctionActivity : AppCompatActivity() {
     }
 
     override fun finish() {
-        if (mViewModel.isEdited == true) {
+        if (mViewModel.isEdited) {
             this.setResult(RESULT_FUNCTION)
         }
         super.finish()
