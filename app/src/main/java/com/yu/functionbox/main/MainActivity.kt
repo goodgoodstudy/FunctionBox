@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import com.yu.functionbox.R
+import com.yu.functionbox.adapter.DbAdapter
 import com.yu.functionbox.adapter.FunctionAdapter
 import com.yu.functionbox.adapter.ScenesAdapter
 import com.yu.functionbox.adapter.SortAdapter
@@ -23,7 +24,9 @@ import com.yu.functionbox.databinding.ActivityMainBinding
 import com.yu.functionbox.event.EventMessage
 import com.yu.functionbox.event.MyEvent
 import com.yu.functionbox.function.FunctionActivity
+import com.yu.functionbox.utils.DbBackUpUtils
 import com.yu.functionbox.utils.EventBusUtils
+import kotlinx.android.synthetic.main.activity_main.view.*
 import org.greenrobot.eventbus.Subscribe
 
 class MainActivity : Activity() {
@@ -33,6 +36,7 @@ class MainActivity : Activity() {
     private lateinit var sortAdapter: SortAdapter
     private lateinit var scenesAdapter: ScenesAdapter
     private lateinit var functionAdapter: FunctionAdapter
+    private lateinit var dbAdapter: DbAdapter
     private val permissions = arrayOf("android.permission.READ_EXTERNAL_STORAGE","android.permission.WRITE_EXTERNAL_STORAGE")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,13 +45,11 @@ class MainActivity : Activity() {
         mContext = this
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         EventBusUtils.register(this)
-        mViewModel = MainViewModel()
+        mViewModel = MainViewModel(this)
         mBinding.viewModel = mViewModel
         initView()
         initData()
         initAdapter()
-
-
     }
     private fun initView(){
 
@@ -68,6 +70,11 @@ class MainActivity : Activity() {
     }
 
     private fun initAdapter() {
+        mBinding.leftDrawerLayout.db_rcy.layoutManager = LinearLayoutManager(mContext)
+        dbAdapter = DbAdapter(mContext)
+        mBinding.leftDrawerLayout.db_rcy.adapter = dbAdapter
+        dbAdapter.setDatas(DbBackUpUtils.getDbs())
+
         mBinding.rvSort.layoutManager = LinearLayoutManager(mContext)
         mBinding.rvScenes.layoutManager = LinearLayoutManager(mContext)
         mBinding.rvFunction.layoutManager = LinearLayoutManager(mContext)
@@ -169,6 +176,7 @@ class MainActivity : Activity() {
             MyEvent.EVENT_SELECT_LAST_SCENE -> scenesAdapter.setSelectPos(event.mObj as Int)
             MyEvent.EVENT_SELECT_FIRST_SORT -> sortAdapter.setSelectPos(1)
             MyEvent.EVENT_SELECT_FIRST_SCENE -> scenesAdapter.setSelectPos(1)
+            MyEvent.EVENT_DB_BACKUP -> dbAdapter.setDatas(DbBackUpUtils.getDbs())
         }
     }
 

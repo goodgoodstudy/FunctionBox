@@ -45,6 +45,7 @@
             android:layout_margin="20dp"
             android:src="@{viewModel.mIconDrawable}"
             android:onClick="@{()->viewModel.action()}"
+            android:background="@color/colorPrimary"
         />
     </RelativeLayout>
 </layout>

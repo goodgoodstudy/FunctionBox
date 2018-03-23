@@ -1,9 +1,11 @@
 package com.yu.functionbox.main
 
+import android.app.Activity
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableList
 import android.text.TextUtils
 import android.util.Log
+import com.yu.functionbox.R
 import com.yu.functionbox.base.BizCallback
 import com.yu.functionbox.base.BizResult
 import com.yu.functionbox.data.FunctionBean
@@ -12,8 +14,10 @@ import com.yu.functionbox.data.SortBean
 import com.yu.functionbox.db.DbService
 import com.yu.functionbox.event.EventMessage
 import com.yu.functionbox.event.MyEvent
+import com.yu.functionbox.toolbar.ViewTitleViewModel
 import com.yu.functionbox.utils.DbBackUpUtils
 import com.yu.functionbox.utils.EventBusUtils
+import com.yu.functionbox.utils.ResourceUtil
 import com.yu.functionbox.utils.ToastUtils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -24,15 +28,17 @@ import java.util.*
  * description
  */
 
-class MainViewModel {
+class MainViewModel (mActivity: Activity){
     var mSortBeans: ObservableList<SortBean> = ObservableArrayList()
     var mSceneBeans: ObservableList<SceneBean> = ObservableArrayList()
     var mFunctionBeans: ObservableList<FunctionBean> = ObservableArrayList()
     private var mSortId: Long = 0
     private var mSceneId: Long = 0
-
+    val titleViewModel: ViewTitleViewModel = ViewTitleViewModel(mActivity)
     init {
         EventBusUtils.register(this)
+        titleViewModel.leftVisible.set(false)
+        titleViewModel.title.set(ResourceUtil.getString(R.string.appname))
     }
 
     fun initData() {
@@ -58,7 +64,10 @@ class MainViewModel {
 
     fun backUpDb(){
         DbBackUpUtils.backUpDb()
+        EventBus.getDefault().post(EventMessage<String>(MyEvent.EVENT_DB_BACKUP))
     }
+
+
     private fun getScenesBySortId(id: Long) {
         DbService.getScenes(id, object : BizCallback<ArrayList<SceneBean>> {
             override fun onSucceed(response: ArrayList<SceneBean>, bizResult: BizResult) {
@@ -153,6 +162,8 @@ class MainViewModel {
                 getFunctionBySceneId(mSceneId)
             }
             MyEvent.EVENT_SAVE_FUNCTION -> saveFunction(event.mObj as FunctionBean)
+
+            MyEvent.EVENT_CLICK_Db -> initData()
         }
     }
 

@@ -18,4 +18,7 @@ object MyEvent {
     const val EVENT_SELECT_FIRST_SORT = 0x500009
     const val EVENT_SELECT_FIRST_SCENE = 0x500010
     const val EVENT_SAVE_FUNCTION = 0x500011
+
+    const val EVENT_CLICK_Db = 0x500012
+    const val EVENT_DB_BACKUP = 0x500013
 }

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+           type="com.yu.functionbox.toolbar.ViewTitleViewModel" />
+
+        <variable
+            name="isShowRightButton"
+            type="Boolean" />
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorPrimary"
+    >
+
+        <RelativeLayout
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:onClick="@{viewModel::onBackClick}"
+            android:visibility="@{viewModel.leftVisible ? View.VISIBLE : View.GONE}">
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icn_back" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:text="@{viewModel.title}"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/btn_more"-->
+            <!--android:layout_width="48dp"-->
+            <!--android:layout_height="48dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:background="@drawable/selector_bg_btn"-->
+            <!--android:visibility="gone">-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/img_more"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:background="@drawable/bg_btn_more" />-->
+        <!--</RelativeLayout>-->
+
+        <RelativeLayout
+            android:id="@+id/btn_right"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:onClick="@{viewModel.onRightClickListener}"
+            android:visibility="@{safeUnbox(isShowRightButton) ? View.VISIBLE : View.GONE}">
+
+            <TextView
+                android:id="@+id/text_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@{viewModel.rightText}"
+                android:textColor="@{safeUnbox(viewModel.rightTextColor)}"
+                android:drawableLeft="@{viewModel.rightDrawable}"
+                android:drawablePadding="2dp"
+                android:textSize="14sp"
+            />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</layout>
