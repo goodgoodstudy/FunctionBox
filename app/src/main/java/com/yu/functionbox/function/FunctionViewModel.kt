@@ -54,7 +54,7 @@ class FunctionViewModel(private val mContext: Context) {
         if (mIsCheck) {
             val bean = FunctionBean()
             bean.id = mId
-            bean.detail = mContent.get()
+            bean.detail = mContent.get()?:""
             EventBus.getDefault().post(EventMessage(MyEvent.EVENT_SAVE_FUNCTION, bean))
         } else {
             EventBus.getDefault().post(EventMessage(MyEvent.EVENT_INSERT_FUNCTION, mContent.get()))
